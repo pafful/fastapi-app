@@ -40,7 +40,7 @@ jobs:
             -Dsonar.password=admin
 
       - name: Trivy FS Scan
-        uses: aquasecurity/trivy-action@0.24.0
+        uses: aquasecurity/trivy-action@v0.35.0
         with:
           scan-type: fs
           format: table
@@ -51,12 +51,13 @@ jobs:
         run: docker build -t fastapi-app:latest .
 
       - name: Trivy Image Scan
-        uses: aquasecurity/trivy-action@0.24.0
+        uses: aquasecurity/trivy-action@v0.35.0
         with:
           image-ref: fastapi-app:latest
           format: table
           exit-code: 1
           severity: CRITICAL,HIGH
+      
 
 
 # name: Security Scan
