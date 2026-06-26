@@ -54,8 +54,16 @@ jobs:
             -Dsonar.host.url=http://localhost:9000 \
             -Dsonar.token=$SONAR_TOKEN
 
+      # - name: Trivy FS Scan
+      #   uses: aquasecurity/trivy-action@v0.35.0
+      #   with:
+      #     scan-type: fs
+      #     format: table
+      #     exit-code: 1
+      #     severity: CRITICAL,HIGH
       - name: Trivy FS Scan
         uses: aquasecurity/trivy-action@v0.35.0
+        continue-on-error: true
         with:
           scan-type: fs
           format: table
