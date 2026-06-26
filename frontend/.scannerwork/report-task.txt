@@ -1,0 +1,6 @@
+projectKey=k8slocalDesktop
+serverUrl=http://localhost:9000
+serverVersion=10.6.0.92116
+dashboardUrl=http://localhost:9000/dashboard?id=k8slocalDesktop
+ceTaskId=e852a402-469b-4534-acc9-da2f2de8babe
+ceTaskUrl=http://localhost:9000/api/ce/task?id=e852a402-469b-4534-acc9-da2f2de8babe

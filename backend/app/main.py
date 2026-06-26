@@ -14,12 +14,19 @@ def custom_generate_unique_id(route: APIRoute) -> str:
 if settings.SENTRY_DSN and settings.ENVIRONMENT != "local":
     sentry_sdk.init(dsn=str(settings.SENTRY_DSN), enable_tracing=True)
 
+# app = FastAPI(
+#     title=settings.PROJECT_NAME,
+#     openapi_url=f"{settings.API_V1_STR}/openapi.json",
+#     generate_unique_id_function=custom_generate_unique_id,
+# )
+
+
 app = FastAPI(
     title=settings.PROJECT_NAME,
-    openapi_url=f"{settings.API_V1_STR}/openapi.json",
+    docs_url="/api/docs",
+    openapi_url="/api/v1/openapi.json",
     generate_unique_id_function=custom_generate_unique_id,
 )
-
 # Set all CORS enabled origins
 if settings.all_cors_origins:
     app.add_middleware(

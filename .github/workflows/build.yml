@@ -1,0 +1,65 @@
+name: Build and Push Docker Images
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      # Step 1 - Download the repository
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+
+      # Step 2 - Configure AWS credentials
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+
+      # Step 3 - Login to Amazon ECR
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+
+      # Step 4 - Enable Docker Buildx
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+
+      # Step 5 - Build and Push Backend
+      - name: Build Backend Image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: backend/Dockerfile
+          platforms: linux/amd64
+          push: true
+          tags: |
+            ${{ vars.ECR_REGISTRY }}/fullstack-fastapi-backend:${{ github.sha }}
+            ${{ vars.ECR_REGISTRY }}/fullstack-fastapi-backend:latest
+
+
+      # Step 6 - Build and Push Frontend
+      - name: Build Frontend Image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: frontend/Dockerfile
+          platforms: linux/amd64
+          push: true
+          build-args: |
+            VITE_API_URL=
+          tags: |
+            ${{ vars.ECR_REGISTRY }}/fullstack-fastapi-frontend:${{ github.sha }}
+            ${{ vars.ECR_REGISTRY }}/fullstack-fastapi-frontend:latest
