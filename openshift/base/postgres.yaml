@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: postgres-secret
-  namespace: fastapi-demo
+  namespace: fastapi-app
 type: Opaque
 stringData:
   POSTGRES_DB: app
@@ -13,7 +13,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: postgres-data
-  namespace: fastapi-demo
+  namespace: fastapi-app
 spec:
   accessModes:
     - ReadWriteOnce
@@ -25,7 +25,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: postgres
-  namespace: fastapi-demo
+  namespace: fastapi-app
 spec:
   replicas: 1
   selector:
@@ -71,7 +71,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: postgres
-  namespace: fastapi-demo
+  namespace: fastapi-app
 spec:
   selector:
     app: postgres

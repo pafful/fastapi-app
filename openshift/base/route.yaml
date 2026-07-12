@@ -2,7 +2,7 @@ apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
   name: frontend
-  namespace: fastapi-demo
+  namespace: fastapi-app
 spec:
   to:
     kind: Service
@@ -17,7 +17,7 @@ apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
   name: backend
-  namespace: fastapi-demo
+  namespace: fastapi-app
 spec:
   to:
     kind: Service

@@ -22,7 +22,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: pipeline-image-builder
-  namespace: fastapi-demo
+  namespace: fastapi-app
 subjects:
   - kind: ServiceAccount
     name: fastapi-pipeline
@@ -36,7 +36,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: pipeline-image-pusher
-  namespace: fastapi-demo
+  namespace: fastapi-app
 subjects:
   - kind: ServiceAccount
     name: fastapi-pipeline
