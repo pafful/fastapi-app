@@ -1,0 +1,79 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: backend-secret
+  namespace: fastapi-demo
+type: Opaque
+stringData:
+  SECRET_KEY: change-this-to-a-long-random-value
+  FIRST_SUPERUSER: admin@example.com
+  FIRST_SUPERUSER_PASSWORD: change-this-password
+  POSTGRES_PASSWORD: change-this-password
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: fastapi-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: image-registry.openshift-image-registry.svc:5000/fastapi-demo/fastapi-backend:initial
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+          env:
+            - name: POSTGRES_SERVER
+              value: postgres
+            - name: POSTGRES_PORT
+              value: "5432"
+            - name: POSTGRES_DB
+              value: app
+            - name: POSTGRES_USER
+              value: postgres
+            - name: PROJECT_NAME
+              value: FastAPI OpenShift
+            - name: STACK_NAME
+              value: fastapi-openshift
+            - name: ENVIRONMENT
+              value: production
+            - name: BACKEND_CORS_ORIGINS
+              value: '["http://localhost","https://localhost"]'
+          envFrom:
+            - secretRef:
+                name: backend-secret
+          readinessProbe:
+            httpGet:
+              path: /api/v1/utils/health-check/
+              port: 8000
+            initialDelaySeconds: 20
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+  namespace: fastapi-demo
+spec:
+  selector:
+    app: backend
+  ports:
+    - name: http
+      port: 8000
+      targetPort: 8000
