@@ -1,0 +1,34 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: fastapi-imagestream-pusher
+  namespace: fastapi-app
+rules:
+  - apiGroups:
+      - image.openshift.io
+    resources:
+      - imagestreams
+      - imagestreams/layers
+      - imagestreams/status
+      - imagestreamtags
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: fastapi-imagestream-pusher
+  namespace: fastapi-app
+subjects:
+  - kind: ServiceAccount
+    name: fastapi-pipeline
+    namespace: fastapi-cicd
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: fastapi-imagestream-pusher

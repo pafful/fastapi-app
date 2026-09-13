@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="560" viewBox="0 0 1200 560" role="img" aria-labelledby="title desc">
+  <title id="title">Full Stack FastAPI application architecture</title>
+  <desc id="desc">Browser traffic passes through Traefik to a React frontend and FastAPI backend. The backend connects to PostgreSQL, SMTP, and Sentry. GitHub Actions publishes images to AWS ECR and deploys them to Kubernetes or OpenShift.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#334155"/>
+    </marker>
+    <style>
+      .box { fill: #f8fafc; stroke: #334155; stroke-width: 2; rx: 12; }
+      .infra { fill: #eff6ff; stroke: #2563eb; stroke-width: 2; rx: 12; }
+      .external { fill: #fefce8; stroke: #ca8a04; stroke-width: 2; rx: 12; }
+      .label { fill: #0f172a; font: 600 18px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; text-anchor: middle; }
+      .small { fill: #475569; font: 14px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; text-anchor: middle; }
+      .line { stroke: #334155; stroke-width: 2.5; fill: none; marker-end: url(#arrow); }
+      .title { fill: #0f172a; font: 700 26px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; text-anchor: middle; }
+    </style>
+  </defs>
+
+  <rect width="1200" height="560" fill="#ffffff"/>
+  <text x="600" y="42" class="title">Full Stack FastAPI Application</text>
+
+  <rect x="55" y="105" width="170" height="82" class="box"/>
+  <text x="140" y="139" class="label">Browser</text>
+  <text x="140" y="164" class="small">Admin or user</text>
+
+  <rect x="285" y="105" width="190" height="82" class="infra"/>
+  <text x="380" y="139" class="label">Traefik</text>
+  <text x="380" y="164" class="small">Reverse proxy</text>
+
+  <rect x="535" y="75" width="210" height="82" class="box"/>
+  <text x="640" y="109" class="label">React frontend</text>
+  <text x="640" y="134" class="small">Vite + TypeScript</text>
+
+  <rect x="535" y="205" width="210" height="82" class="infra"/>
+  <text x="640" y="239" class="label">FastAPI backend</text>
+  <text x="640" y="264" class="small">REST API + JWT auth</text>
+
+  <rect x="845" y="205" width="190" height="82" class="external"/>
+  <text x="940" y="239" class="label">PostgreSQL</text>
+  <text x="940" y="264" class="small">Persistent data</text>
+
+  <rect x="845" y="75" width="190" height="82" class="external"/>
+  <text x="940" y="109" class="label">SMTP</text>
+  <text x="940" y="134" class="small">MailCatcher locally</text>
+
+  <rect x="845" y="335" width="190" height="82" class="external"/>
+  <text x="940" y="369" class="label">Sentry</text>
+  <text x="940" y="394" class="small">Optional monitoring</text>
+
+  <rect x="285" y="390" width="190" height="82" class="infra"/>
+  <text x="380" y="424" class="label">GitHub Actions</text>
+  <text x="380" y="449" class="small">Test and build</text>
+
+  <rect x="535" y="390" width="210" height="82" class="external"/>
+  <text x="640" y="424" class="label">AWS ECR</text>
+  <text x="640" y="449" class="small">Container registry</text>
+
+  <rect x="845" y="455" width="250" height="62" class="infra"/>
+  <text x="970" y="493" class="label">Kubernetes / OpenShift</text>
+
+  <path d="M225 146 H285" class="line"/>
+  <path d="M475 125 H535" class="line"/>
+  <path d="M475 165 C500 190 510 230 535 245" class="line"/>
+  <path d="M745 245 H845" class="line"/>
+  <path d="M745 220 C790 190 800 125 845 125" class="line"/>
+  <path d="M745 270 C800 300 800 370 845 375" class="line"/>
+  <path d="M380 390 V330 H640 V287" class="line"/>
+  <path d="M475 431 H535" class="line"/>
+  <path d="M745 445 C800 460 800 485 845 485" class="line"/>
+</svg>

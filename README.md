@@ -24,29 +24,26 @@ This repository addresses those needs by providing a complete stack with sensibl
 
 ## Architecture Diagram
 
+![Full Stack FastAPI application architecture](docs/architecture.svg)
+
+The Mermaid source below provides an editable version for GitHub and Mermaid-enabled Markdown viewers.
+
 ```mermaid
 flowchart LR
-    User[Browser / Admin User] --> FE[React Frontend\nVite + TypeScript]
-    FE --> API[FastAPI Backend\nREST API / JWT Auth]
+    User[Browser / Admin User] --> Frontend[React Frontend]
+    Frontend --> API[FastAPI Backend]
     API --> DB[(PostgreSQL)]
-    API --> SMTP[SMTP / Mailcatcher]
-    API --> Sentry[Sentry (optional)]
+    API --> Mail[MailCatcher / SMTP]
+    API --> Sentry[Sentry]
 
-    subgraph LocalOrProd[Container Platform]
-        Traefik[Traefik Reverse Proxy]
-        FE
-        API
-        DB
-    end
-
-    User --> Traefik
-    Traefik --> FE
+    User --> Traefik[Traefik Reverse Proxy]
+    Traefik --> Frontend
     Traefik --> API
 
     GH[GitHub Actions] --> ECR[AWS ECR]
-    ECR --> K8S[Kubernetes / OpenShift]
-    K8S --> FE
-    K8S --> API
+    ECR --> K8s[Kubernetes / OpenShift]
+    K8s --> Frontend
+    K8s --> API
 ```
 
 ## Folder Structure
@@ -102,6 +99,10 @@ flowchart LR
 │   │   ├── postgres.yaml
 │   │   └── route.yaml
 │   └── tekton/
+│       ├── backend-taskrun.yaml
+│       ├── build-and-push-task.yaml
+│       ├── frontend-taskrun.yaml
+│       ├── image-push-rbac.yaml
 │       └── rbac.yaml
 ├── compose.yml
 ├── compose.override.yml
@@ -302,7 +303,11 @@ OpenShift base manifests:
 
 Tekton resources:
 
-- `tekton/rbac.yaml`
+- `openshift/tekton/backend-taskrun.yaml` — runs the backend image build task
+- `openshift/tekton/build-and-push-task.yaml` — defines the container build and push task
+- `openshift/tekton/frontend-taskrun.yaml` — runs the frontend image build task
+- `openshift/tekton/image-push-rbac.yaml` — grants permissions required to push images
+- `openshift/tekton/rbac.yaml` — grants Tekton pipeline access permissions
 
 ### Deployment model
 

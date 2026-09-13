@@ -1,0 +1,26 @@
+apiVersion: tekton.dev/v1
+kind: TaskRun
+metadata:
+  generateName: fastapi-frontend-build-
+  namespace: fastapi-cicd
+spec:
+  serviceAccountName: fastapi-pipeline
+
+  taskRef:
+    name: clone-build-push
+
+  params:
+    - name: repo-url
+      value: https://github.com/pafful/fastapi-app.git
+
+    - name: revision
+      value: main
+
+    - name: context-dir
+      value: frontend
+
+    - name: dockerfile
+      value: Dockerfile
+
+    - name: image
+      value: image-registry.openshift-image-registry.svc:5000/fastapi-app/fastapi-frontend:latest

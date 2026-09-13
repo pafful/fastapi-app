@@ -1,0 +1,86 @@
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: clone-build-push
+  namespace: fastapi-cicd
+spec:
+  params:
+    - name: repo-url
+      type: string
+    - name: revision
+      type: string
+      default: main
+    - name: context-dir
+      type: string
+    - name: dockerfile
+      type: string
+      default: Dockerfile
+    - name: image
+      type: string
+
+  results:
+    - name: image-url
+    - name: image-digest
+
+  volumes:
+    - name: source
+      emptyDir: {}
+    - name: containers-storage
+      emptyDir: {}
+
+  steps:
+    - name: clone
+      image: docker.io/alpine/git:latest
+      volumeMounts:
+        - name: source
+          mountPath: /workspace/source
+      script: |
+        #!/bin/sh
+        set -eux
+
+        git clone "$(params.repo-url)" /workspace/source/repository
+        cd /workspace/source/repository
+        git checkout "$(params.revision)"
+
+    - name: build-and-push
+      image:  quay.io/buildah/stable:v1.42.0
+      securityContext:
+        capabilities:
+          add:
+            - SETFCAP
+      volumeMounts:
+        - name: source
+          mountPath: /workspace/source
+        - name: containers-storage
+          mountPath: /var/lib/containers
+      env:
+        - name: REGISTRY_AUTH_FILE
+          value: /run/containers/0/auth.json
+      script: |
+        #!/usr/bin/env bash
+        set -eux
+
+        SOURCE="/workspace/source/repository/$(params.context-dir)"
+        IMAGE="$(params.image)"
+
+        cd "${SOURCE}"
+
+        buildah --storage-driver=vfs bud \
+          --format=oci \
+          --tls-verify=false \
+          -f "$(params.dockerfile)" \
+          -t "${IMAGE}" .
+
+        buildah --storage-driver=vfs push \
+          --tls-verify=false \
+          "${IMAGE}" \
+          "docker://${IMAGE}"
+
+        printf "%s" "${IMAGE}" > "$(results.image-url.path)"
+
+        DIGEST=$(
+          buildah --storage-driver=vfs inspect \
+          --format '{{.FromImageDigest}}' "${IMAGE}" 2>/dev/null || true
+        )
+
+        printf "%s" "${DIGEST}" > "$(results.image-digest.path)"
